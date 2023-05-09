@@ -35,7 +35,9 @@ def main():
     # with concurrent.futures.ThreadPoolExecutor() as executor:
     #     future = executor.submit(run_timer, 1)
 
-    print(dijkstra(graph, node_a))
+    shortest_paths = dijkstra(graph, node_a)
+    for node_id, distance in shortest_paths.items():
+        print(f'Node A -> Node {node_id}: {distance:.2f}')
 
 
 def print_elapsed_time():
@@ -52,18 +54,17 @@ def run_timer(interval):
 
 
 def dijkstra(graph: WeightedGraph, source: Node):
-    # set = []
-    distances = {}  # key: node, value: distance from source
-    for node in graph.nodes.values():
-        distances[node] = float('inf')
-    distances[source] = 0
-    heap = [(distances[source], source)]
+    nodes = graph.get_nodes()
+    distances = {}  # key: node_id, value: distance from source
+    for node_id in nodes.keys():
+        distances[node_id] = float('inf')
+    distances[source.get_id()] = 0
+    heap = [(distances[source.get_id()], source)]
     heapq.heapify(heap)
 
     while len(heap) > 0:
         curr_dist, curr_node = heapq.heappop(heap)
-        print(f'curr_dist: {curr_dist}, curr_node: {curr_node}')
-        if curr_dist > distances[curr_node]:
+        if curr_dist > distances[curr_node.get_id()]:
             continue
         # For each neighbor of the current node
         for neighbor, link in (graph.get_neighbors(curr_node.get_id())).items():
@@ -72,12 +73,36 @@ def dijkstra(graph: WeightedGraph, source: Node):
 
             # If the distance to the neighbor is less than the current known distance,
             # update the distance and add the neighbor to the priority queue
-            if dist < distances[neighbor]:
-                if neighbor in distances.keys():
-                    print(f'neighbor: {neighbor}, dist: {dist}')
-                distances[neighbor] = dist
+            if dist < distances[neighbor.get_id()]:
+                distances[neighbor.get_id()] = dist
                 heapq.heappush(heap, (dist, neighbor))
     return distances
+
+# WORKING CODE
+# def dijkstra(graph: WeightedGraph, source: Node):
+#     nodes = graph.get_nodes()
+#     distances = {}  # key: node_id, value: distance from source
+#     for node_id in nodes.keys():
+#         distances[node_id] = float('inf')
+#     distances[source.get_id()] = 0
+#     heap = [(distances[source.get_id()], source)]
+#     heapq.heapify(heap)
+#
+#     while len(heap) > 0:
+#         curr_dist, curr_node = heapq.heappop(heap)
+#         if curr_dist > distances[curr_node.get_id()]:
+#             continue
+#         # For each neighbor of the current node
+#         for neighbor, link in (graph.get_neighbors(curr_node.get_id())).items():
+#             # Calculate the distance to the neighbor through the current node
+#             dist = curr_dist + link.cost
+#
+#             # If the distance to the neighbor is less than the current known distance,
+#             # update the distance and add the neighbor to the priority queue
+#             if dist < distances[neighbor.get_id()]:
+#                 distances[neighbor.get_id()] = dist
+#                 heapq.heappush(heap, (dist, neighbor))
+#     return distances
 
 if __name__ == '__main__':
     with open('file.txt', 'w') as f:

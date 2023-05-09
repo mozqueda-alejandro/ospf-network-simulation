@@ -33,6 +33,9 @@ class WeightedGraph:
     def get_neighbors(self, node_id: str) -> dict:
         return self.nodes[node_id].get_neighbors()
 
+    def get_nodes(self) -> dict:
+        return self.nodes
+
     def get_node(self, node_id):
         return self.nodes[node_id]
 
@@ -44,7 +47,6 @@ class WeightedGraph:
         """
         with open('file.txt', 'a') as file:
             # file.write(f'{time:.1f}s :Simulating node failure...\n')
-            # Print to terminal
             print(f'{time:.1f}s :Simulating node failure...')
             to_remove = []
             if len(self.nodes) == 0:
@@ -54,12 +56,10 @@ class WeightedGraph:
                 failure_threshold = random.random()
                 if failure_threshold <= node.node_failure_probability:
                     # file.write(f'Node {node_id} failed\n')
-                    # Print to terminal
-                    print(f'Node {node_id} failed - Probability of Failure: {node.node_failure_probability:.2f} - Failure Threshold: {failure_threshold:.2f}')
+                    print(f'Node {node_id} failed - Failure Probability= {node.node_failure_probability:.2f} >= Failure Threshold= {failure_threshold:.2f}')
                     to_remove.append(node_id)
             for node_id in to_remove:
                 self.remove_node(node_id)
-
 
     def simulate_link_failure(self):
         """

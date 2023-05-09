@@ -27,8 +27,8 @@ class Node:
     def __str__(self)  -> str:
         return f'Node {self.id}'
 
-    # def __hash__(self):
-    #     return hash(self.id)
-    #
-    # def __eq__(self, other):
-    #     return self.id == other.id
+    def __hash__(self):
+        return hash(self.id)
+
+    def __eq__(self, other):
+        return isinstance(other, Node) and self.id == other.id
