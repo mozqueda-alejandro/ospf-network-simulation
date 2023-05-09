@@ -1,36 +1,18 @@
 import heapq
 from queue import Queue
 
+# 1. Set the distance to the start node to 0 and all other distances to infinity.
+# 2. Create a priority queue and add the start node with distance 0 to the queue.
+# 3. While the priority queue is not empty:
+#       a. Pop the node with the smallest distance from the priority queue. This will be the current node.
+#       b. For each neighbor of the current node:
+#             i. Calculate the distance from the start node to the neighbor through the current node.
+#             ii. If the calculated distance is less than the
+#             current known distance to the neighbor, update the distance.
+#             iii. Add the neighbor to the priority queue with its updated distance.
+# 4. When all nodes have been visited, the distances dictionary
+# contains the shortest distance to each node from the start node.
 
-def dijkstra(graph, start):
-    # Initialize distances to all nodes as infinity, except for start node
-    distances = {node: float('inf') for node in graph}
-    distances[start] = 0
-
-    # Create a priority queue to store the next nodes to be visited
-    pq = [(0, start)]
-
-    # While there are still nodes to visit
-    while pq:
-        # Get the node with the smallest distance from start
-        curr_dist, curr_node = heapq.heappop(pq)
-
-        # If we have already visited this node, continue to the next one
-        if curr_dist > distances[curr_node]:
-            continue
-
-        # For each neighbor of the current node
-        for neighbor, weight in graph[curr_node].items():
-            # Calculate the distance to the neighbor through the current node
-            dist = curr_dist + weight
-
-            # If the distance to the neighbor is less than the current known distance,
-            # update the distance and add the neighbor to the priority queue
-            if dist < distances[neighbor]:
-                distances[neighbor] = dist
-                heapq.heappush(pq, (dist, neighbor))
-
-    return distances
 
 
 def bfs(graph, start_node):
