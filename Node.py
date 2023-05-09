@@ -24,6 +24,9 @@ class Node:
     def get_neighbors(self) -> dict:
         return self.neighbors
 
+    def __repr__(self):
+        return f'Node {self.id}'
+
     def __str__(self)  -> str:
         return f'Node {self.id}'
 
