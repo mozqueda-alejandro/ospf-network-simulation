@@ -9,6 +9,7 @@ class WeightedGraph:
     def __init__(self):
         self.nodes = {}  # key: node_id, value: Node object
         self.adjacency_matrix = {}  # key: node_id, value: list of neighbors
+        # self.
 
     def add_node(self, node: Node) -> None:
         self.nodes[node.get_id()] = node
@@ -92,8 +93,6 @@ class WeightedGraph:
                 if neighbor > node:  # to avoid processing duplicate links
                     failure_threshold = random.random()
                     if failure_threshold <= link.link_failure_probability:
-                        # Write to file
-                        # file.write(f'Link {node.get_id()} - {neighbor.get_id()} failed\n')
                         print(f'{time:.1f}s : Link {node.get_id()} - {neighbor.get_id()} failed - Failure Probability= {link.link_failure_probability:.2f} >= Failure Threshold= {failure_threshold:.2f}')
                         to_remove.append((node.get_id(), neighbor.get_id()))
 
