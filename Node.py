@@ -4,12 +4,13 @@ from Link import *
 
 class Node:
     static_counter = 0
-    node_repair_
+    node_restore_time = 3
 
     def __init__(self, node_id: str, node_failure_probability: float) -> None:
         self.id = node_id
         self.neighbors = {}  # {Node object: Link object}
         self.node_failure_probability = node_failure_probability
+        self.node_status = True  # True = node is active, False = node is inactive
         self.local_counter = Node.static_counter
         Node.static_counter += 1
 

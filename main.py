@@ -57,6 +57,8 @@ def main():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.submit(run_timer, 1)
 
+    print('wow we got here')
+
     # graph.simulate_link_failure(1)
 
 
@@ -64,19 +66,6 @@ def print_elapsed_time():
     elapsed_time = time.monotonic() - start_time
     print(f"Elapsed time: {elapsed_time:.1f} seconds")
 
-
-# def run_timer(interval):
-#     while True:
-#         flag = graph.simulate_node_failure(time.monotonic() - start_time)
-#         if flag == -1:
-#             return
-#         elif flag == 1:
-#             shortest_paths = dijkstra(graph, node_a)
-#             for node_id, distance in shortest_paths.items():
-#                 print(f'\tNode A -> Node {node_id}: {distance:.2f}')
-#         elif flag == 0:
-#             pass  # No node failure
-#         time.sleep(interval)
 
 def run_timer(interval):
     if graph.counter == 0:
@@ -86,6 +75,8 @@ def run_timer(interval):
     while True:
         node_flag = graph.simulate_node_failure(time.monotonic() - start_time)
         link_flag = graph.simulate_link_failure(time.monotonic() - start_time)
+        print(f'Node flag: {node_flag}')
+        print(f'Link flag: {link_flag}')
         if node_flag == -1 and link_flag == -1:
             print('Simulation complete.')
             return
@@ -94,10 +85,11 @@ def run_timer(interval):
             for node_id, distance in shortest_paths.items():
                 print(f'\tNode 1 -> Node {node_id}: {distance:.2f}')
         time.sleep(interval)
+        print('-----------------------------------')
 
 
 def dijkstra(graph: WeightedGraph, source: Node):
-    nodes = graph.get_nodes()
+    nodes = graph.get_active_nodes()
     distances = {}  # key: node_id, value: distance from source
     for node_id in nodes.keys():
         distances[node_id] = float('inf')
@@ -111,6 +103,10 @@ def dijkstra(graph: WeightedGraph, source: Node):
             continue
         # For each neighbor of the current node
         for neighbor, link in (curr_node.get_neighbors()).items():
+            # Check if link is active
+            if not link.link_status:
+                continue
+
             # Calculate the distance to the neighbor through the current node
             dist = curr_dist + link.cost
 

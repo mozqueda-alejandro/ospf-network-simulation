@@ -28,13 +28,25 @@ class WeightedGraph:
         node2.add_neighbor(node1, link)
 
     def remove_edge(self, node1_id, node2_id):
+        # node1 = self.nodes[node1_id]
+        # node2 = self.nodes[node2_id]
+        # node1.remove_neighbor(node2)
+        # node2.remove_neighbor(node1)
+        # Set the link status of the link between node1 and node2 to False
         node1 = self.nodes[node1_id]
         node2 = self.nodes[node2_id]
-        node1.remove_neighbor(node2)
-        node2.remove_neighbor(node1)
+        node1.neighbors[node2].link_status = False
+        node2.neighbors[node1].link_status = False
 
     def get_nodes(self) -> dict:
         return self.nodes
+
+    def get_active_nodes(self) -> dict:
+        active_nodes = {}
+        for node_id, node in self.nodes.items():
+            if node.node_status:
+                active_nodes[node_id] = node
+        return active_nodes
 
     def get_node(self, node_id):
         return self.nodes[node_id]
@@ -45,8 +57,9 @@ class WeightedGraph:
         Generates a random failure threshold for each node and compares it to the node's failure probability.
         If the node's failure probability is greater than the failure threshold, the node is removed from the graph.
         """
+        nodes = self.get_active_nodes()
         node_removed = 0  # int representing if a node was removed, not removed, or no nodes in graph
-        if len(self.nodes) == 0:
+        if len(nodes) == 0:
             # print("No nodes in graph")
             node_removed = -1
             return node_removed
@@ -56,7 +69,7 @@ class WeightedGraph:
             # file.write(f'{time:.1f}s :Simulating node failure...\n')
             print(f'{time:.1f}s : Node failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
             to_remove = []
-            for node_id, node in self.nodes.items():
+            for node_id, node in nodes.items():
                 failure_threshold = random.random()
                 if failure_threshold <= node.node_failure_probability:
                     # Write to file
@@ -65,21 +78,17 @@ class WeightedGraph:
                     to_remove.append(node_id)
                     node_removed = 1
             for node_id in to_remove:
-                self.remove_node(node_id)
+                # self.remove_node(node_id)
+                self.nodes[node_id].node_status = False
 
         return node_removed
 
     def simulate_link_failure(self, time):
-        """
-        Simulates a link failure for every link in the graph.
-        Generates a random failure threshold for each link and compares it to the link's failure probability.
-        If the link's failure probability is greater than the failure threshold, the link is removed from the graph.
-        """
-        # iterate through every link in the graph
         links_exist = False
         print(f'{time:.1f}s : Link failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
         to_remove = []
-        for node in self.nodes.values():
+        nodes = self.get_active_nodes()
+        for node in nodes.values():
             for neighbor, link in node.get_neighbors().items():
                 links_exist = True
                 if neighbor > node:  # to avoid processing duplicate links

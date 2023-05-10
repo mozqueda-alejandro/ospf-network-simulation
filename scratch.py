@@ -98,3 +98,9 @@ def bfs(graph, start_node):
     # graph.add_edge(node_b, node_d, 2, 0.075)
     # graph.add_edge(node_c, node_d, 4, 0.125)
     # graph.add_edge(node_d, node_e, 6, 0.0425)
+
+        """
+        Simulates a link failure for every link in the graph.
+        Generates a random failure threshold for each link and compares it to the link's failure probability.
+        If the link's failure probability is greater than the failure threshold, the link is removed from the graph.
+        """
