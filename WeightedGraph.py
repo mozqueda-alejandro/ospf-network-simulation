@@ -66,15 +66,18 @@ class WeightedGraph:
             del self.faulty_nodes[node_id]
 
     def restore_links(self):
+        temp_ids = []
         for link_ids, time in self.faulty_links.items():
             if time == Link.link_restore_time:
                 node1_id, node2_id = link_ids
                 self.nodes[node1_id].neighbors[self.nodes[node2_id]].link_status = True
                 self.nodes[node2_id].neighbors[self.nodes[node1_id]].link_status = True
-                del self.faulty_links[link_ids]
+                temp_ids.append(link_ids)
                 print(f"\tLINK {node1_id} - {node2_id} RESTORED")
             else:
                 self.faulty_links[link_ids] += 1
+        for link_ids in temp_ids:
+            del self.faulty_links[link_ids]
 
     def simulate_node_failure(self, time) -> int:
         # Restore nodes that have been in a faulty state for Node.node_restore_time
@@ -104,7 +107,7 @@ class WeightedGraph:
 
     def simulate_link_failure(self, time):
         # Restore links that have been in a faulty state for Link.link_restore_time
-        # self.restore_links()
+        self.restore_links()
 
         # print(f'{time:.1f}s : Link failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
 
