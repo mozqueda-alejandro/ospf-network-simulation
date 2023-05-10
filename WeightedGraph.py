@@ -54,13 +54,16 @@ class WeightedGraph:
         return self.nodes[node_id]
 
     def restore_nodes(self):
+        temp_ids = []
         for node_id, time in self.faulty_nodes.items():
             if time == Node.node_restore_time:
                 self.nodes[node_id].node_status = True
-                del self.faulty_nodes[node_id]
+                temp_ids.append(node_id)
                 print(f"\tNODE {node_id} RESTORED")
             else:
                 self.faulty_nodes[node_id] += 1
+        for node_id in temp_ids:
+            del self.faulty_nodes[node_id]
 
     def restore_links(self):
         for link_ids, time in self.faulty_links.items():
@@ -75,7 +78,7 @@ class WeightedGraph:
 
     def simulate_node_failure(self, time) -> int:
         # Restore nodes that have been in a faulty state for Node.node_restore_time
-        # self.restore_nodes()
+        self.restore_nodes()
 
         nodes = self.get_active_nodes()
         node_removed = 0  # int representing if a node was removed, not removed, or no nodes in graph
