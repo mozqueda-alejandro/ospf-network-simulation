@@ -32,6 +32,23 @@ def bfs(graph, start_node):
                 visited.add(neighbor_node)
                 q.put(neighbor_node)
 
+# WORKING BREADTH FIRST SEARCH
+# links = []
+#         visited = set()
+#         q = Queue()
+#
+#         q.put(start_node)
+#         visited.add(start_node)
+#
+#         while not q.empty():
+#             current_node = q.get()
+#             print(current_node.id)
+#
+#             for neighbor, link in current_node.get_neighbors().items():
+#                 if neighbor not in visited:
+#                     visited.add(neighbor)
+#                     q.put(neighbor)
+
 # WORKING CODE
 # def dijkstra(graph: WeightedGraph, source: Node):
 #     nodes = graph.get_nodes()
@@ -57,3 +74,27 @@ def bfs(graph, start_node):
 #                 distances[neighbor.get_id()] = dist
 #                 heapq.heappush(heap, (dist, neighbor))
 #     return distances
+
+    # graph = WeightedGraph()
+    # node_a = Node("A", 0.0)
+    #
+    # # Create nodes
+    # node_b = Node("B", 0.075)
+    # node_c = Node("C", 0.05)
+    # node_d = Node("D", 0.0875)
+    # node_e = Node("E", 0.1)
+    #
+    # # Add nodes to graph
+    # graph.add_node(node_a)
+    # graph.add_node(node_b)
+    # graph.add_node(node_c)
+    # graph.add_node(node_d)
+    # graph.add_node(node_e)
+    #
+    # # Add edges to graph
+    # graph.add_edge(node_a, node_b, 5, 0.0625)
+    # graph.add_edge(node_a, node_c, 3, 0.0575)
+    # graph.add_edge(node_b, node_c, 1, 0.05)
+    # graph.add_edge(node_b, node_d, 2, 0.075)
+    # graph.add_edge(node_c, node_d, 4, 0.125)
+    # graph.add_edge(node_d, node_e, 6, 0.0425)

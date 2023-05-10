@@ -4,6 +4,7 @@ from Link import *
 
 class Node:
     static_counter = 0
+    node_repair_
 
     def __init__(self, node_id: str, node_failure_probability: float) -> None:
         self.id = node_id
@@ -35,3 +36,6 @@ class Node:
 
     def __eq__(self, other):
         return isinstance(other, Node) and self.id == other.id
+
+    def __gt__(self, other):
+        return self.id > other.id
