@@ -29,27 +29,39 @@ python3 main.py
 ```
 class Link:
     Attributes:
-        
+        counter – used to give each link a unique ID.
+        link_restore_time  – the number of cycles needed before a faulty link is brought back online. 
+        link_ID – the ID of a link, specified by the counter.
+        cost – the cost of the link.
+        link_failure_probability – the probability of that link to fail.
+        link_status – true if link is active, false otherwise.
     Description:
-        Represents our network
+        This class is used represent nodes (routers) being linked together.
 ```
 
 ```
 class Node:
     Attributes:
-        
+        static_counter – used to keep track of nodes.
+        node_restore_time – the number of cycles needed before a faulty node is brought back online.
+        id – node’s ID.
+        neightbors – dictionary storing the node’s neighbors.
+        node_failure_probability – probability of the node failing.
+        node_status – true if node is active, otherwise false.
+        local_counter – determined by the static counter to keep track of nodes.
     Description:
-        Represents individual routers, including every attributes that real routers have.
+        This class represents routers that are going to be connected using the link class.
 ```
 
 ```
 class Weighted Graph:
     Attributes:
-
+        nodes – dictionary that holds the node ID and corresponding node object.
+        adjacency_matrix – dictionary that holds node ID and its list of neighbors
     Description:
-
+        This class represents a network of routers (nodes) and links connecting each router together.
 ```
-
-## Results
-
-Our results
+```
+function Dijkstra:
+    Runs the Dijkstra algorithm that is called from main.
+```
