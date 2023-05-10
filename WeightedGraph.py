@@ -8,8 +8,9 @@ class WeightedGraph:
 
     def __init__(self):
         self.nodes = {}  # key: node_id, value: Node object
-        self.adjacency_matrix = {}  # key: node_id, value: list of neighbors
-        # self.
+
+        self.faulty_nodes = {}  # key: node_id, value: time spent in faulty state
+        self.faulty_links = {}  # key: (node1_id, node2_id), value: time spent in faulty state
 
     def add_node(self, node: Node) -> None:
         self.nodes[node.get_id()] = node
@@ -52,7 +53,30 @@ class WeightedGraph:
     def get_node(self, node_id):
         return self.nodes[node_id]
 
+    def restore_nodes(self):
+        for node_id, time in self.faulty_nodes.items():
+            if time == Node.node_restore_time:
+                self.nodes[node_id].node_status = True
+                del self.faulty_nodes[node_id]
+                print(f"\tNODE {node_id} RESTORED")
+            else:
+                self.faulty_nodes[node_id] += 1
+
+    def restore_links(self):
+        for link_ids, time in self.faulty_links.items():
+            if time == Link.link_restore_time:
+                node1_id, node2_id = link_ids
+                self.nodes[node1_id].neighbors[self.nodes[node2_id]].link_status = True
+                self.nodes[node2_id].neighbors[self.nodes[node1_id]].link_status = True
+                del self.faulty_links[link_ids]
+                print(f"\tLINK {node1_id} - {node2_id} RESTORED")
+            else:
+                self.faulty_links[link_ids] += 1
+
     def simulate_node_failure(self, time) -> int:
+        # Restore nodes that have been in a faulty state for Node.node_restore_time
+        # self.restore_nodes()
+
         nodes = self.get_active_nodes()
         node_removed = 0  # int representing if a node was removed, not removed, or no nodes in graph
         if len(nodes) == 0:
@@ -65,19 +89,23 @@ class WeightedGraph:
         for node_id, node in nodes.items():
             failure_threshold = random.random()
             if failure_threshold <= node.node_failure_probability:
-                print(f'Node {node_id} failed - fProb= {node.node_failure_probability:.2f} >= fThresh= {failure_threshold:.2f}')
+                print(f'\tNODE {node_id} FAILED - fProb= {node.node_failure_probability:.2f} >= fThresh= {failure_threshold:.2f}')
                 to_remove.append(node_id)
                 node_removed = 1
         for node_id in to_remove:
             self.nodes[node_id].node_status = False
+            if node_id not in self.faulty_nodes:
+                self.faulty_nodes[node_id] = 0
 
         return node_removed
 
     def simulate_link_failure(self, time):
-        links_exist = False
+        # Restore links that have been in a faulty state for Link.link_restore_time
+        # self.restore_links()
 
         # print(f'{time:.1f}s : Link failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
 
+        links_exist = False
         to_remove = []
         for node in self.get_active_nodes().values():
             for neighbor, link in node.get_neighbors().items():
@@ -93,11 +121,14 @@ class WeightedGraph:
                 if neighbor > node:  # to avoid processing duplicate links
                     failure_threshold = random.random()
                     if failure_threshold <= link.link_failure_probability:
-                        print(f'{time:.1f}s : Link {node.get_id()} - {neighbor.get_id()} failed - Failure Probability= {link.link_failure_probability:.2f} >= Failure Threshold= {failure_threshold:.2f}')
+                        print(f'\tLINK {node.get_id()} - {neighbor.get_id()} FAILED - Failure Probability= {link.link_failure_probability:.2f} >= Failure Threshold= {failure_threshold:.2f}')
                         to_remove.append((node.get_id(), neighbor.get_id()))
 
         for node_id, neighbor_id in to_remove:
             self.remove_edge(node_id, neighbor_id)
+            if (node_id, neighbor_id) not in self.faulty_links and (neighbor_id, node_id) not in self.faulty_links:
+                self.faulty_links[(node_id, neighbor_id)] = 0
+
         return -1 if not links_exist else len(to_remove)
 
     def __str__(self):

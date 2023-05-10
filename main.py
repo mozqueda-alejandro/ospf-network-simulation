@@ -54,24 +54,24 @@ def main():
     graph.add_edge(node_9, node_10, 1, 0.025)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(run_timer, 1)
+        future = executor.submit(run_timer, 1, node_1)
 
 
 def get_elapsed_time():
     return time.monotonic() - start_time
 
 
-def run_timer(interval):
+def run_timer(interval, selected_node):
     if graph.counter == 0:
-        distances, shortest_paths = dijkstra(graph, node_1)
+        distances, shortest_paths = dijkstra(graph, selected_node)
         for destination_node_id, path in shortest_paths.items():
             path_str = ' -> '.join([str(node) for node in path])
             print(f"Path: {path_str} Cost: {distances[destination_node_id]:.2f}")
 
     while True:
         print('-' * 103)
-        node_flag = graph.simulate_node_failure(time.monotonic() - start_time)
-        link_flag = graph.simulate_link_failure(time.monotonic() - start_time)
+        node_flag = graph.simulate_node_failure(get_elapsed_time())
+        link_flag = graph.simulate_link_failure(get_elapsed_time())
 
         # Not enough nodes or links to continue the simulation
         if node_flag == -1 and link_flag == -1:
@@ -80,7 +80,7 @@ def run_timer(interval):
 
         # Either a node or link or both were removed
         if node_flag >= 1 or link_flag >= 1:
-            distances, shortest_paths = dijkstra(graph, node_1)
+            distances, shortest_paths = dijkstra(graph, selected_node)
             for destination_node_id, path in shortest_paths.items():
                 path_str = ' -> '.join([str(node) for node in path])
                 print(f"Path: {path_str} Cost: {distances[destination_node_id]:.2f}")
