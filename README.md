@@ -65,7 +65,3 @@ class Weighted Graph:
 function Dijkstra:
     Runs the Dijkstra algorithm that is called from main.
 ```
-
-## Results
-
-Our results
