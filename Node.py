@@ -26,6 +26,9 @@ class Node:
     def get_neighbors(self) -> dict:
         return self.neighbors
 
+    def get_status(self) -> bool:
+        return self.node_status
+
     def __repr__(self):
         return f'Node {self.id}'
 

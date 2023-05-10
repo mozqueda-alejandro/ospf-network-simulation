@@ -104,3 +104,9 @@ def bfs(graph, start_node):
         Generates a random failure threshold for each link and compares it to the link's failure probability.
         If the link's failure probability is greater than the failure threshold, the link is removed from the graph.
         """
+
+        """
+        Simulates a node failure for every node in the graph.
+        Generates a random failure threshold for each node and compares it to the node's failure probability.
+        If the node's failure probability is greater than the failure threshold, the node is removed from the graph.
+        """

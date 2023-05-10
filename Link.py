@@ -9,5 +9,11 @@ class Link:
         self.link_status = True  # True = link is active, False = link is inactive
         Link.counter += 1
 
+    def get_cost(self):
+        return self.cost
+
+    def get_status(self):
+        return self.link_status
+
     def __str__(self):
         return f'Link cost: {self.cost} / Link failure probability: {self.link_failure_probability}'

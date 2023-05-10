@@ -57,65 +57,86 @@ def main():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.submit(run_timer, 1)
 
-    print('wow we got here')
-
-    # graph.simulate_link_failure(1)
-
 
 def print_elapsed_time():
     elapsed_time = time.monotonic() - start_time
-    print(f"Elapsed time: {elapsed_time:.1f} seconds")
+    print(f"{elapsed_time:.1f}s", end=' ')
 
 
 def run_timer(interval):
     if graph.counter == 0:
-        shortest_paths = dijkstra(graph, node_1)
-        for node_id, distance in shortest_paths.items():
-            print(f'\tNode 1 -> Node {node_id}: {distance:.2f}')
+        distances, shortest_paths = dijkstra(graph, node_1)
+        for destination_node_id, path in shortest_paths.items():
+            path_str = ' -> '.join([str(node) for node in path])
+            print(f"Path: {path_str} Cost: {distances[destination_node_id]:.2f}")
+
     while True:
+        print('-----------------------------------')
         node_flag = graph.simulate_node_failure(time.monotonic() - start_time)
         link_flag = graph.simulate_link_failure(time.monotonic() - start_time)
-        print(f'Node flag: {node_flag}')
-        print(f'Link flag: {link_flag}')
+
+        # Not enough nodes or links to continue the simulation
         if node_flag == -1 and link_flag == -1:
             print('Simulation complete.')
             return
+
+        # Either a node or link or both were removed
         if node_flag >= 1 or link_flag >= 1:
-            shortest_paths = dijkstra(graph, node_1)
-            for node_id, distance in shortest_paths.items():
-                print(f'\tNode 1 -> Node {node_id}: {distance:.2f}')
+            pass
+            # shortest_paths = dijkstra(graph, node_1)
+            # for node_id, distance in shortest_paths.items():
+            #     print(f'\tNode 1 -> Node {node_id}: {distance:.2f}')
+        else:
+            print(f'{print_elapsed_time()} - No change')
+
         time.sleep(interval)
-        print('-----------------------------------')
 
 
 def dijkstra(graph: WeightedGraph, source: Node):
     nodes = graph.get_active_nodes()
     distances = {}  # key: node_id, value: distance from source
+    paths = {source.get_id(): [source.get_id()]}
+
+    # Initialize distances from the source to all other nodes to infinity
     for node_id in nodes.keys():
         distances[node_id] = float('inf')
-    distances[source.get_id()] = 0
-    heap = [(distances[source.get_id()], source)]
+
+    # Initialize the distance from the source to itself to 0
+    source_id = source.get_id()
+    distances[source_id] = 0
+    heap = [(distances[source_id], source)]
     heapq.heapify(heap)
 
+    # While the priority queue is not empty
     while len(heap) > 0:
         curr_dist, curr_node = heapq.heappop(heap)
+
+        # If the distance to the current node is greater than the current known distance,
+        # skip the current node
         if curr_dist > distances[curr_node.get_id()]:
             continue
-        # For each neighbor of the current node
+
         for neighbor, link in (curr_node.get_neighbors()).items():
             # Check if link is active
-            if not link.link_status:
+            if not link.get_status():
+                continue
+
+            # Check if neighbor is active
+            if not neighbor.get_status():
                 continue
 
             # Calculate the distance to the neighbor through the current node
-            dist = curr_dist + link.cost
+            dist = curr_dist + link.get_cost()
 
             # If the distance to the neighbor is less than the current known distance,
             # update the distance and add the neighbor to the priority queue
             if dist < distances[neighbor.get_id()]:
                 distances[neighbor.get_id()] = dist
                 heapq.heappush(heap, (dist, neighbor))
-    return distances
+
+                # Update the path to the neighbor
+                paths[neighbor.get_id()] = paths[curr_node.get_id()] + [neighbor.get_id()]
+    return distances, paths
 
 
 if __name__ == '__main__':

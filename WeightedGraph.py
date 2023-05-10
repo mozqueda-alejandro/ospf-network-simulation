@@ -52,44 +52,42 @@ class WeightedGraph:
         return self.nodes[node_id]
 
     def simulate_node_failure(self, time) -> int:
-        """
-        Simulates a node failure for every node in the graph.
-        Generates a random failure threshold for each node and compares it to the node's failure probability.
-        If the node's failure probability is greater than the failure threshold, the node is removed from the graph.
-        """
         nodes = self.get_active_nodes()
         node_removed = 0  # int representing if a node was removed, not removed, or no nodes in graph
         if len(nodes) == 0:
-            # print("No nodes in graph")
             node_removed = -1
             return node_removed
 
-        with open('file.txt', 'a') as file:
-            # Write to file
-            # file.write(f'{time:.1f}s :Simulating node failure...\n')
-            print(f'{time:.1f}s : Node failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
-            to_remove = []
-            for node_id, node in nodes.items():
-                failure_threshold = random.random()
-                if failure_threshold <= node.node_failure_probability:
-                    # Write to file
-                    # file.write(f'Node {node_id} failed\n')
-                    print(f'Node {node_id} failed - Failure Probability= {node.node_failure_probability:.2f} >= Failure Threshold= {failure_threshold:.2f}')
-                    to_remove.append(node_id)
-                    node_removed = 1
-            for node_id in to_remove:
-                # self.remove_node(node_id)
-                self.nodes[node_id].node_status = False
+        # print(f'{time:.0f}s : Node failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
+
+        to_remove = []
+        for node_id, node in nodes.items():
+            failure_threshold = random.random()
+            if failure_threshold <= node.node_failure_probability:
+                print(f'Node {node_id} failed - fProb= {node.node_failure_probability:.2f} >= fThresh= {failure_threshold:.2f}')
+                to_remove.append(node_id)
+                node_removed = 1
+        for node_id in to_remove:
+            self.nodes[node_id].node_status = False
 
         return node_removed
 
     def simulate_link_failure(self, time):
         links_exist = False
-        print(f'{time:.1f}s : Link failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
+
+        # print(f'{time:.1f}s : Link failure sim{"." * (WeightedGraph.counter % 4 + 1)}')
+
         to_remove = []
-        nodes = self.get_active_nodes()
-        for node in nodes.values():
+        for node in self.get_active_nodes().values():
             for neighbor, link in node.get_neighbors().items():
+                # Check if link is active
+                if not link.get_status():
+                    continue
+
+                # Check if neighbor is active
+                if not neighbor.get_status():
+                    continue
+
                 links_exist = True
                 if neighbor > node:  # to avoid processing duplicate links
                     failure_threshold = random.random()
