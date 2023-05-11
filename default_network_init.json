@@ -1,0 +1,115 @@
+{
+    "network": {
+        "routers": {
+            "1": 0.0,
+            "2": 0.02,
+            "3": 0.02,
+            "4": 0.02,
+            "5": 0.02,
+            "6": 0.02,
+            "7": 0.02,
+            "8": 0.02,
+            "9": 0.02,
+            "10": 0.02
+        },
+        "interfaces": [
+            {
+                "source": "1",
+                "destination": "2",
+                "cost": 5,
+                "probability": 0.01
+            },
+            {
+                "source": "1",
+                "destination": "3",
+                "cost": 1,
+                "probability": 0.01
+            },
+            {
+                "source": "2",
+                "destination": "3",
+                "cost": 3,
+                "probability": 0.01
+            },
+            {
+                "source": "node_2",
+                "destination": "node_4",
+                "cost": 2,
+                "probability": 0.01
+            },
+            {
+                "source": "node_2",
+                "destination": "node_5",
+                "cost": 8,
+                "probability": 0.01
+            },
+            {
+                "source": "node_3",
+                "destination": "node_5",
+                "cost": 1,
+                "probability": 0.01
+            },
+            {
+                "source": "node_3",
+                "destination": "node_7",
+                "cost": 4,
+                "probability": 0.01
+            },
+            {
+                "source": "node_4",
+                "destination": "node_6",
+                "cost": 1,
+                "probability": 0.01
+            },
+            {
+                "source": "node_4",
+                "destination": "node_8",
+                "cost": 4,
+                "probability": 0.01
+            },
+            {
+                "source": "node_5",
+                "destination": "node_7",
+                "cost": 2,
+                "probability": 0.01
+            },
+            {
+                "source": "node_6",
+                "destination": "node_7",
+                "cost": 4,
+                "probability": 0.01
+            },
+            {
+                "source": "node_6",
+                "destination": "node_8",
+                "cost": 7,
+                "probability": 0.01
+            },
+            {
+                "source": "node_7",
+                "destination": "node_9",
+                "cost": 3,
+                "probability": 0.01
+            },
+            {
+                "source": "node_7",
+                "destination": "node_10",
+                "cost": 5,
+                "probability": 0.01
+            },
+            {
+                "source": "node_8",
+                "destination": "node_10",
+                "cost": 2,
+                "probability": 0.01
+            },
+            {
+                "source": "node_9",
+                "destination": "node_10",
+                "cost": 1,
+                "probability": 0.01
+            }
+        ]
+    }
+}
+
