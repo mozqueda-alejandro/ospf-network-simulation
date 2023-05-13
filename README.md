@@ -10,6 +10,11 @@ This project is meant to simulate a mesh network in which nodes and links may fa
 
 This is the description for the UNR class CPE 400 project labeled as Dynamic Routing Mechanism Design in Faulty Network.
 
+Default 10-node graph
+
+The following graph was used to run the simulation and was generated in the program with the NetworkX graphical library
+## ![default_topology](https://github.com/mozqueda-alejandro/ospf_network_simulation/assets/89401406/a29aaa48-7db7-4a1d-ad8d-09fc2f5cb4d9)
+
 ## Resources
 
 ``` 
